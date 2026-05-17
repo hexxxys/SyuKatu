@@ -48,12 +48,12 @@ export default function CompanyCard({
       {...(isDragging ? {} : { ...attributes, ...listeners })}
       onClick={onClick}
       className={clsx(
-        "group relative select-none rounded-lg border bg-white shadow-sm transition-all",
+        "group relative select-none border bg-white transition-all",
         compact ? "px-2.5 py-1.5" : "p-3",
         activeDragging ? "opacity-0" : "opacity-100",
         isDragging
-          ? "rotate-2 shadow-2xl border-blue-200 cursor-grabbing"
-          : "cursor-grab hover:shadow-md hover:border-slate-300 active:cursor-grabbing"
+          ? "rotate-1 shadow-2xl border-indigo-300 cursor-grabbing"
+          : "cursor-grab hover:shadow-md hover:border-indigo-300 active:cursor-grabbing"
       )}
     >
       {/* 優先度インジケーター */}

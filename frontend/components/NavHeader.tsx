@@ -9,10 +9,10 @@ export default async function NavHeader() {
   if (!session) redirect("/")
 
   return (
-    <header className="flex shrink-0 items-center justify-between border-b border-slate-100 bg-white px-6 py-3">
+    <header className="flex shrink-0 items-center justify-between bg-slate-900 px-6 py-3">
       {/* ロゴ + ナビゲーション */}
       <div className="flex items-center gap-6">
-        <span className="text-sm font-semibold text-slate-900">就勝つ</span>
+        <span className="text-sm font-black text-white tracking-widest bg-indigo-600 px-2 py-1">就勝つ</span>
         <NavLinks />
       </div>
 
@@ -24,14 +24,14 @@ export default async function NavHeader() {
             alt={session.user.name ?? ""}
             width={24}
             height={24}
-            className="rounded-full"
+            className="rounded-full ring-2 ring-indigo-400"
           />
         ) : (
-          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-200 text-xs font-medium text-slate-600">
+          <div className="flex h-6 w-6 items-center justify-center bg-indigo-600 text-xs font-bold text-white">
             {session.user?.name?.[0]}
           </div>
         )}
-        <span className="hidden text-sm text-slate-600 sm:block">{session.user?.name}</span>
+        <span className="hidden text-sm text-slate-300 sm:block">{session.user?.name}</span>
 
         <form
           action={async () => {
@@ -41,7 +41,7 @@ export default async function NavHeader() {
         >
           <button
             type="submit"
-            className="flex items-center gap-1 rounded px-2 py-1 text-xs text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
+            className="flex items-center gap-1 px-2 py-1 text-xs text-slate-400 hover:bg-slate-700 hover:text-white transition-colors"
           >
             <LogOut size={12} />
             ログアウト

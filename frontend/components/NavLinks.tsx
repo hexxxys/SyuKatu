@@ -23,10 +23,10 @@ export default function NavLinks() {
             key={href}
             href={href}
             className={clsx(
-              "rounded px-3 py-1.5 text-sm transition-colors",
+              "px-3 py-1.5 text-sm font-medium transition-colors",
               active
-                ? "bg-slate-100 font-medium text-slate-900"
-                : "text-slate-500 hover:bg-slate-50 hover:text-slate-700"
+                ? "bg-indigo-600 text-white"
+                : "text-slate-400 hover:bg-slate-700 hover:text-white"
             )}
           >
             {label}
