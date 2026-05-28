@@ -1,23 +1,22 @@
-# 作業ログ
+﻿# 作業ログ
 
-## 2026-05-03
-- プロジェクト初期セットアップ
-  - CLAUDE.md を作成
-  - .gitignore を作成（秘密情報保護用）
-  - logs/log.md を作成（作業履歴用）
-  - README.md を作成（プロジェクト概要用）
-  - docs/app-definition.md を作成（アプリ定義・技術スタック・アーキテクチャ）
-  - docs/requirements.md を作成（要件定義書 v2.1）
+## 2026-05-29
 
-## 2026-05-03（続き）
-- Googleログイン機構を実装
-  - frontend/ を作成（Next.js 16 + Auth.js v5 + Tailwind CSS）
-  - backend/ を作成（FastAPI + SQLAlchemy + Alembic）
-  - frontend/auth.ts：Google OAuth設定・Googleトークン自動更新・FastAPI用JWT生成
-  - frontend/middleware.ts：未ログイン時リダイレクト
-  - frontend/app/page.tsx：ログイン画面
-  - frontend/app/kanban/page.tsx：ログイン後の仮画面
-  - backend/app/core/security.py：NEXTAUTH_SECRETでJWT検証
-  - backend/app/api/deps.py：ユーザー自動作成ロジック
-  - backend/alembic/versions/20260503_0001_create_users_table.py：usersテーブル作成
-  - alembic upgrade head 実行済み（jobtrack.db 生成）
+### Google Search Console 所有権確認ファイルの設置
+
+**目的**: Google Search Console でサイトの所有権を証明するため、HTML確認ファイルを公開ディレクトリに設置。
+
+**変更ファイル**:
+- `frontend/public/google69e0d610026dc291.html` — Google 所有権確認用ファイル（新規作成）
+
+## 2026-05-22
+
+### GmailラベルエラーのデバッグUI追加
+
+**問題**: 「メールを取得」ボタンを押すと「Gmail に Syukatu-ES-BOX ラベルが見つかりません」と表示され、ラベルの自動作成も失敗していた。エラーの詳細が握りつぶされていたため原因不明だった。
+
+**対応**: エラー詳細を画面に表示するよう修正。
+
+**変更ファイル**:
+- `frontend/app/api/mail/es-deadlines/route.ts` — Gmail APIエラーを捕捉し`error_detail`フィールドとして返す
+- `frontend/components/settings/MailImportPanel.tsx` — `error_detail`を赤いボックスで表示する

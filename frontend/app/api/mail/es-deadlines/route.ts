@@ -50,6 +50,7 @@ export type MailPreviewOut = {
   count: number
   label_found: boolean
   label_id?: string
+  error_detail?: string
 }
 
 async function gmailFetch<T>(path: string, accessToken: string, init?: RequestInit): Promise<T> {
@@ -61,8 +62,13 @@ async function gmailFetch<T>(path: string, accessToken: string, init?: RequestIn
     },
     cache: "no-store",
   })
-  if (!res.ok) throw new Error(`Gmail API ${res.status}: ${await res.text().catch(() => "")}`)
-  return res.json() as Promise<T>
+  const text = await res.text().catch(() => "")
+  if (!res.ok) throw new Error(`Gmail API ${res.status}: ${text.slice(0, 300)}`)
+  try {
+    return JSON.parse(text) as T
+  } catch {
+    throw new Error(`Gmail APIレスポンスのJSON解析失敗 (status ${res.status}): ${text.slice(0, 300)}`)
+  }
 }
 
 function headerVal(
@@ -180,23 +186,33 @@ export async function GET() {
     )
   }
 
-  const labelList = await gmailFetch<GmailLabelList>("labels", accessToken).catch(() => null)
+  let labelListError: string | null = null
+  const labelList = await gmailFetch<GmailLabelList>("labels", accessToken).catch((e) => {
+    labelListError = e instanceof Error ? e.message : String(e)
+    return null
+  })
   const label = labelList?.labels?.find(
     (l) => l.name.toLowerCase() === BOX_LABEL_NAME.toLowerCase()
   )
 
   // ラベルがなければ自動作成
-  const resolvedLabel = label ?? await gmailFetch<GmailLabel>("labels", accessToken, {
+  let labelCreateError: string | null = null
+  const createdLabel = label ? null : await gmailFetch<GmailLabel>("labels", accessToken, {
     method: "POST",
     body: JSON.stringify({
       name: BOX_LABEL_NAME,
       labelListVisibility: "labelShow",
       messageListVisibility: "show",
     }),
-  }).catch(() => null)
+  }).catch((e) => {
+    labelCreateError = e instanceof Error ? e.message : String(e)
+    return null
+  })
+  const resolvedLabel = label ?? createdLabel
 
   if (!resolvedLabel) {
-    return NextResponse.json<MailPreviewOut>({ items: [], count: 0, label_found: false, label_id: undefined })
+    const errorDetail = labelListError ?? labelCreateError ?? "ラベルの取得・作成に失敗しました"
+    return NextResponse.json<MailPreviewOut>({ items: [], count: 0, label_found: false, label_id: undefined, error_detail: errorDetail })
   }
 
   const msgList = await gmailFetch<GmailMessageList>(

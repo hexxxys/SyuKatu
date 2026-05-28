@@ -158,8 +158,13 @@ export default function MailImportPanel() {
 
       {preview && !preview.label_found && (
         <div className="px-4 py-6 text-center text-sm text-slate-500">
-          <p className="font-medium">Gmail に「Syukatu-ES-BOX」ラベルが見つかりません。</p>
-          <p className="mt-1 text-xs">Gmail でラベルを作成し、就活メールを移動してください。</p>
+          <p className="font-medium">Gmail ラベルの取得・作成に失敗しました。</p>
+          <p className="mt-1 text-xs">一度ログアウトして再ログインすると解決する場合があります。</p>
+          {preview.error_detail && (
+            <p className="mt-2 rounded bg-red-50 px-3 py-2 text-left text-xs text-red-700 font-mono break-all">
+              {preview.error_detail}
+            </p>
+          )}
         </div>
       )}
 
